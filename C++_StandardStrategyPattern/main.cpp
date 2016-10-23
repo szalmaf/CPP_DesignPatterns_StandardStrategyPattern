@@ -10,23 +10,23 @@
 using namespace std;
 
 
-class GameCharacter;
+class GameCharacter; // Forward declare GameCharacter to use in HealthCalcClass
 
 class HealthCalcClass {
 public:
-    virtual int calc(const GameCharacter&) const {
+    virtual int calc(const GameCharacter&) const { // Deafult def of calc fn
         return 0;
     }
 };
 
 class SlowHealthDegr : public HealthCalcClass {
 public:
-    int calc(const GameCharacter&) const {
+    int calc(const GameCharacter&) const { // Specialized calc fn
         return 5;
     };
 };
 
-HealthCalcClass defaultHealthCalc;
+HealthCalcClass defaultHealthCalc; // Default used in GameCharacter default constructor, see below
 
 class GameCharacter {
 public:
@@ -43,10 +43,12 @@ private:
 
 class BadEvilGuy : public GameCharacter {
 public:
-    explicit BadEvilGuy(HealthCalcClass * phcf) : GameCharacter(phcf) {};
+    explicit BadEvilGuy(HealthCalcClass * phcf = &defaultHealthCalc) : GameCharacter(phcf) {};
 };
 
 int main(int argc, const char * argv[]) {
+    BadEvilGuy ebg0; // Use default health calc
+    cout << ebg0.healthValue() << endl;
     SlowHealthDegr slow;
     BadEvilGuy ebg1(&slow);
     cout << ebg1.healthValue() << endl;
